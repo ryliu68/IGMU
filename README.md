@@ -44,3 +44,22 @@ We extend our gratitude to the following repositories for their contributions an
 
 
 Their works have significantly contributed to the development of our work.
+
+
+---
+
+## Citation
+
+If you find this work or code useful for your research, please cite our paper:
+
+```bibtex
+@inproceedings{liu2025igmu,
+  title = {Rethinking Machine Unlearning in Image Generation Models},
+  author = {Liu, Renyang and Feng, Wenjie and Zhang, Tianwei and Zhou, Wei and Cheng, Xueqi and Ng, See-Kiong},
+  booktitle = {ACM Conference on Computer and Communications Security (CCS)},
+  organization = {ACM},
+  year = {2025},
+}
+```
+
+Thank you for your interest and support!
