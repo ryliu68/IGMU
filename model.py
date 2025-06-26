@@ -1,4 +1,3 @@
-import argparse
 import os
 import warnings
 
@@ -38,6 +37,7 @@ class CustomTrainer(Trainer):
     """
     Custom Trainer that saves only the classifier head parameters.
     """
+
     def save_model(self, output_dir=None, **kwargs):
         """
         Overrides the save_model method to save only the classifier head.
@@ -57,6 +57,7 @@ class CustomImageFolderDataset(Dataset):
     """
     Custom dataset that wraps torchvision's ImageFolder and applies a processor.
     """
+
     def __init__(self, dataset, processor):
         self.dataset = dataset
         self.processor = processor
@@ -79,6 +80,7 @@ class AdvancedClassifierHead(nn.Module):
     """
     Advanced classifier head with Squeeze-and-Excitation (SE) block and deep layers.
     """
+
     def __init__(self, hidden_size, dropout_rate=0.3):
         super(AdvancedClassifierHead, self).__init__()
         # Squeeze-and-Excitation module
@@ -111,6 +113,7 @@ class AdvancedClassifierHead_CLIP(nn.Module):
     """
     Classifier head with channel attention for CLIP image features.
     """
+
     def __init__(self, input_dim=768, hidden_dim=512, dropout_rate=0.3):
         super(AdvancedClassifierHead_CLIP, self).__init__()
         # Channel-wise attention module
@@ -144,6 +147,7 @@ class CombinedModel(nn.Module):
     End-to-end model combining a ViT encoder and an advanced classifier head.
     Used for binary classification tasks.
     """
+
     def __init__(self, vit_model, classifier_head):
         super().__init__()
         self.vit = vit_model.eval()
@@ -173,6 +177,7 @@ class CLIPBinaryClassifier(nn.Module):
     """
     Binary classifier using frozen CLIP image features and an advanced classifier head.
     """
+
     def __init__(self, clip_model, classifier_head):
         super(CLIPBinaryClassifier, self).__init__()
         self.clip_model = clip_model

@@ -26,7 +26,6 @@ NUDE_KEYS_3_4_2 = [
 ]
 
 
-
 def fix_seed(seed):
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)

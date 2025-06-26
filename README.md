@@ -23,7 +23,18 @@ python -W ignore benchmark.py --evaluation-aspect forggeting|fid|lpips|yolo|CSDR
 python -W ignore benchmark.py --object True --evaluation-aspect fid|lpips
 
 ```
+### NOTE
 
+By default, `/home/mrliu/miniconda3/envs/igmu/lib/python3.12/site-packages/torchmetrics/functional/multimodal/clip_score.py` returns the mean CLIP score for a batch.  
+If you wish to obtain the individual CLIP scores for all images in a batch, please comment out line 165 in `clip_score.py`:
+
+```python
+model, processor = _get_clip_model_and_processor(model_name_or_path)
+device = images.device if isinstance(images, Tensor) else images[0].device
+score, _ = _clip_score_update(images, text, model.to(device), processor)
+# score = score.mean(0) # line 165
+return torch.max(score, torch.zeros_like(score))
+```
 
 ### Acknowledgements
 
