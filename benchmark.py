@@ -61,7 +61,7 @@ def evaluate_forgot(args):
         for unlearning_method in args.unlearn_methods:
             args.unlearning_method = unlearning_method
 
-            args.val_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['forgot']}/{args.unlearning_method}"
+            args.val_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['forgot']}/{args.unlearning_method}"
             accuracy = evaluate_forgot_single(args, model, processor)
             results["accuracy"][args.unlearning_type][args.unlearning_method] = accuracy
 
@@ -120,13 +120,13 @@ def evaluate_FID(args):
 
     for unlearning_type in args.unlearn_types:
         args.unlearning_type = unlearning_type
-        args.ref_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['remove_word']}/ORG"
+        args.ref_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['remove_word']}/ORG"
 
         for unlearning_method in args.unlearn_methods:
             args.unlearning_method = unlearning_method
-            args.val_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['forgot']}/{args.unlearning_method}"
+            args.val_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['forgot']}/{args.unlearning_method}"
 
-            FID = iqa_fid(args.ref_dir, args.val_dir, dataset_res=299, batch_size=128)
+            FID = iqa_fid(args.ref_dir, args.val_dir, dataset_res=299, batch_size=args.batch_size)
             results["FID"][args.unlearning_type][args.unlearning_method] = round(FID, 2)
 
             print(unlearning_type, unlearning_method, FID)
@@ -140,7 +140,8 @@ def evaluate_FID_object(args):
     """
     Evaluate FID for object-related unlearning types specifically.
     """
-    args.unlearn_types = ["object_church", "object_parachute"]
+    # args.unlearn_types = ["object_church", "object_parachute"]
+    args.unlearn_types = ["object_church"]
 
     results = multidict()
     iqa_fid = pyiqa.create_metric("fid", device=device)
@@ -151,10 +152,10 @@ def evaluate_FID_object(args):
         for unlearning_method in args.unlearn_methods:
             args.unlearning_method = unlearning_method
 
-            args.ref_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['unrelated']}/ORG"
-            args.val_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['unrelated']}/{args.unlearning_method}"
+            args.ref_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['unrelated']}/ORG"
+            args.val_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['unrelated']}/{args.unlearning_method}"
 
-            FID = iqa_fid(args.ref_dir, args.val_dir, dataset_res=299, batch_size=128)
+            FID = iqa_fid(args.ref_dir, args.val_dir, dataset_res=299, batch_size=args.batch_size)
             FID = round(FID, 2)
 
             results["FID"][args.unlearning_type][args.unlearning_method] = FID
@@ -176,12 +177,12 @@ def evaluate_LPIPS(args):
 
     for unlearning_type in args.unlearn_types:
         args.unlearning_type = unlearning_type
-        args.ref_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['remove_word']}/ORG"
+        args.ref_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['remove_word']}/ORG"
         filenames_ref = glob.glob(f"{args.ref_dir}/*[.png|.jpg|.jpeg|.JPEG]")
 
         for unlearning_method in args.unlearn_methods:
             args.unlearning_method = unlearning_method
-            args.val_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['forgot']}/{args.unlearning_method}"
+            args.val_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['forgot']}/{args.unlearning_method}"
             filenames_val = glob.glob(f"{args.val_dir}/*[.png|.jpg|.jpeg|.JPEG]")
 
             LPIPS_list = []
@@ -212,7 +213,8 @@ def evaluate_LPIPS_object(args):
     """
     Evaluate LPIPS for object-unlearning, per category and as average.
     """
-    args.unlearn_types = ["object_church", "object_parachute"]
+    # args.unlearn_types = ["object_church", "object_parachute"]
+    args.unlearn_types = ["object_church"]
 
     results = multidict()
     results_avg = multidict()
@@ -221,15 +223,18 @@ def evaluate_LPIPS_object(args):
     for unlearning_type in args.unlearn_types:
         args.unlearning_type = unlearning_type
         categories = configs[args.unlearning_type]['categories']
+        categories = categories[:1] # Airplane only
 
         for unlearning_method in args.unlearn_methods:
             args.unlearning_method = unlearning_method
             LPIPS_list_all = []
             for category in categories:
-                args.ref_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['unrelated']}/ORG/{category}"
+                args.ref_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['unrelated']}/ORG/{category}"
                 filenames_ref = glob.glob(f"{args.ref_dir}/*[.png|.jpg|.jpeg|.JPEG]")
-                args.val_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['unrelated']}/{args.unlearning_method}/{category}"
+                args.val_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['unrelated']}/{args.unlearning_method}/{category}"
                 filenames_val = glob.glob(f"{args.val_dir}/*[.png|.jpg|.jpeg|.JPEG]")
+
+
 
                 LPIPS_list = []
                 for i in tqdm(range(len(filenames_ref)), desc=f"{args.unlearning_type} - {args.unlearning_method} - {category}"):
@@ -276,7 +281,7 @@ def evaluate_YOLO(args):
         for unlearning_method in args.unlearn_methods:
             args.unlearning_method = unlearning_method
 
-            args.val_dir = f"data/images/For_eval/{configs[args.unlearning_type]['data']['forgot']}/{args.unlearning_method}"
+            args.val_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearning_type]['data']['forgot']}/{args.unlearning_method}"
             filenames_val = glob.glob(f"{args.val_dir}/*[.png|.jpg|.jpeg|.JPEG]")
 
             total = len(filenames_val)
@@ -318,16 +323,16 @@ def evaluate_CSDR(args):
     """
     items_to_remove = ["naked", "nude", " with Van Gogh style", "Church", "church", "Parachute", "parachute"]
 
-    args.gen_nums = 20
+    args.gen_nums = 5
     args.gen_type = "forgot"
 
     clip_score_fn = partial(
         clip_score, model_name_or_path="openai/clip-vit-base-patch16")
 
     if args.gen_type == "forgot":
-        prompt_dict = "datasets/forgot.json"
+        prompt_dict = "dataset/Benchmarking_prompts/forgot_demo.json"
     else:
-        prompt_dict = "datasets/retain.json"
+        prompt_dict = "dataset/Benchmarking_prompts/retain_demo.json"
 
     with open(prompt_dict, 'r') as file:
         promts = json.load(file)
@@ -339,8 +344,8 @@ def evaluate_CSDR(args):
         args.unlearn_method = unlearn_method
         for unlearn_type in args.unlearn_types:
             args.unlearn_type = unlearn_type
-            args.val_dir = f"data/images/For_eval/{args.unlearn_type}/forgot/{args.unlearn_method}"
-            args.ref_dir = f"data/images/For_eval/{args.unlearn_type}/remove_word/ORG"
+            args.val_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearn_type]['data']['forgot']}/{args.unlearn_method}"
+            args.ref_dir = f"dataset/Benchmarking_images_demo/{configs[args.unlearn_type]['data']['remove_word']}/ORG"
 
             img_gen_classes = list(promts[args.unlearn_type].keys())
 
@@ -405,13 +410,9 @@ def evaluate_CSDR(args):
 
 
 if __name__ == '__main__':
-    # Parse command-line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--train-type', type=str, required=False, choices=["nudity", "style_vangogh", "object_church", "object_parachute"],
-                        help="Training data type (not used in evaluation scripts).")
-    parser.add_argument('--save-dir', type=str, default="saved_model", help="Directory to save trained models.")
-    parser.add_argument('--batch-size', type=int, default=200, help="Batch size for evaluation.")
-    parser.add_argument('--evaluation-asepect', type=str, required=True,
+    parser.add_argument('--batch-size', type=int, default=5, help="Batch size for evaluation.")
+    parser.add_argument('--evaluation-aspect', type=str, required=True,
                         choices=["forggeting", "fid", "yolo", "lpips", "CSDR"],
                         help="Select which evaluation metric to run.")
     parser.add_argument('--object', type=bool, default=False, choices=[True, False],
@@ -423,7 +424,8 @@ if __name__ == '__main__':
     fix_seed(2024)
 
     # Define unlearning types and methods for all benchmarks
-    args.unlearn_types = ["nudity", "style_vangogh", "object_church", "object_parachute"]
+    # args.unlearn_types = ["nudity", "style_vangogh", "object_church", "object_parachute"]
+    args.unlearn_types = ["nudity"]
     args.unlearn_methods = [
         "ORG", "ESD", "FMN", "SPM", "AdvUnlearn", "MACE", "RECE",
         "DoCoPreG", "UCE", "Receler", "ConcptPrune"
@@ -434,26 +436,26 @@ if __name__ == '__main__':
     os.makedirs(args.results_dir, exist_ok=True)
 
     # Dispatch evaluation according to the chosen aspect
-    if args.evaluation_asepect == "forggeting":
+    if args.evaluation_aspect == "forggeting":
         evaluate_forgot(args)
-    elif args.evaluation_asepect == "fid":
+    elif args.evaluation_aspect == "fid":
         if args.object:
             evaluate_FID_object(args)
         else:
             evaluate_FID(args)
-    elif args.evaluation_asepect == "lpips":
+    elif args.evaluation_aspect == "lpips":
         if args.object:
             evaluate_LPIPS_object(args)
         else:
             evaluate_LPIPS(args)
-    elif args.evaluation_asepect == "yolo":
+    elif args.evaluation_aspect == "yolo":
         evaluate_YOLO(args)
-    elif args.evaluation_asepect == "CSDR":
+    elif args.evaluation_aspect == "CSDR":
         evaluate_CSDR(args)
     else:
-        raise NotImplementedError(f"Unknown evaluation aspect: {args.evaluation_asepect}")
+        raise NotImplementedError(f"Unknown evaluation aspect: {args.evaluation_aspect}")
 
-    # args.evaluation_asepects = ["forggeting", "fid", "yolo", "lpips",  "CSDR"]
+    # args.evaluation_aspects = ["forggeting", "fid", "yolo", "lpips",  "CSDR"]
 
-    # for evaluation_asepect in args.evaluation_asepects:
-    # args.evaluation_asepect = evaluation_asepect
+    # for evaluation_aspect in args.evaluation_aspects:
+    # args.evaluation_aspect = evaluation_aspect
