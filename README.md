@@ -4,10 +4,41 @@
 
 ## Introduction
 
-This repository contains the PyTorch implementation for the ACM CCS 2025 paper [IGMU: Rethinking Machine Unlearning in Image Generation Models]().
+This repository contains the PyTorch implementation for the ACM CCS 2025 paper [IGMU: Rethinking Machine Unlearning in Image Generation Models](https://arxiv.org/abs/2506.02761).
+
+## Update (multi_multiC, 2025-08-08)
+
+To support a wider range of unlearning tasks, we have introduced a new checker **`multi_multiC`**.  
+Unlike the previous **`bi_multiC`**, which was limited to binary classification, the new **`multi_multiC`** supports multiple unlearning tasks:
+- **NSFW**: Supports detection of Nudity (now).
+- **Object**: Supports detection of 10 categories from *Imagenette*.
+- **Style**: Directly supports detection of 129 artist styles from *WikiArt*.
+
+We welcome everyone to try out the new version.
+
+---
+
+## Example Usage
+
+You can evaluate your unlearning results with the provided script `eval_unlearning.py`.
+
+```bash
+python eval_unlearning.py     --indicator multi_multiC     --concept "Object"     --batch-size 5
+```
+
+### Arguments
+- `--concept`: The concept to evaluate.  
+  Supported:
+  - `"Nudity"`
+  - `"Style"` (129 classes, see `utils/name_to_id.py` for task names)
+  - `"Object"` (10 classes, see `utils/name_to_id.py` for task names)
+- `--indicator`: Choose from:
+  - `bi_multiC` (binary classification)
+  - `multi_multiC` (multi-class classification)
+- `--batch-size`: Batch size for evaluation.
 
 
-## Getting Started
+## Getting Started (Benchmarking, 20250606)
 
 ```bash
 # Create and activate the Conda environment
@@ -34,6 +65,21 @@ device = images.device if isinstance(images, Tensor) else images[0].device
 score, _ = _clip_score_update(images, text, model.to(device), processor)
 # score = score.mean(0) # line 165
 return torch.max(score, torch.zeros_like(score))
+```
+
+## Citation
+
+If you use this codebase or the D-ANI dataset, please cite the following work:
+
+```bibtex
+@inproceedings{liu2025igmu,
+  title = {Rethinking Machine Unlearning in Image Generation Models},
+  author = {Liu, Renyang and Feng, Wenjie and Zhang, Tianwei and Zhou, Wei and Cheng, Xueqi and Ng, See-Kiong},
+  booktitle = {ACM Conference on Computer and Communications Security (CCS)},
+  organization = {ACM},
+  year = {2025},
+}
+
 ```
 
 ### Acknowledgements

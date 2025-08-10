@@ -17,7 +17,7 @@ from ultralytics import YOLO
 
 from benchmark_configs import configs
 from util import fix_seed, multidict
-from model import AdvancedClassifierHead_CLIP, CLIPBinaryClassifier
+from models.multiC_model import Bi_MultiC, Bi_MultiC_Classifier
 
 # Suppress all warnings globally
 warnings.filterwarnings("ignore")
@@ -36,12 +36,12 @@ def load_clip(args):
 
     # Load CLIP backbone
     clip_model = CLIPModel.from_pretrained(clip_model_name)
-    classifier_head = AdvancedClassifierHead_CLIP(input_dim=clip_model.visual_projection.in_features)
+    classifier_head = Bi_MultiC()
     classifier_head.load_state_dict(torch.load(header_path))
     classifier_head = classifier_head.to(device)
 
     # Compose the model for evaluation
-    model = CLIPBinaryClassifier(clip_model, classifier_head)
+    model = Bi_MultiC_Classifier(clip_model, classifier_head)
     model.to(device)
 
     return model, processor
