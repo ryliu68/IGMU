@@ -23,7 +23,7 @@ We welcome everyone to try out the new version.
 You can evaluate your unlearning results with the provided script `eval_unlearning.py`.
 
 ```bash
-python eval_unlearning.py     --indicator multi_multiC     --concept "Object"     --batch-size 5
+python eval_unlearning.py --indicator multi_multiC --concept "Nudity" --batch-size 5
 ```
 
 ### Arguments
