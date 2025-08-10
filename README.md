@@ -69,7 +69,7 @@ return torch.max(score, torch.zeros_like(score))
 
 ## Citation
 
-If help, please cite the following work:
+If you find this work helpful, we would greatly appreciate it if you could cite it.
 
 ```bibtex
 @inproceedings{liu2025igmu,
