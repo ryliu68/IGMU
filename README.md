@@ -69,7 +69,7 @@ return torch.max(score, torch.zeros_like(score))
 
 ## Citation
 
-If you use this codebase or the D-ANI dataset, please cite the following work:
+If help, please cite the following work:
 
 ```bibtex
 @inproceedings{liu2025igmu,
