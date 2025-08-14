@@ -43,7 +43,7 @@ python eval_unlearning.py --indicator multi_multiC --concept "Nudity" --batch-si
 ```bash
 # Create and activate the Conda environment
 conda env create --file environment.yaml
-conda activate aigc
+conda activate igmu
 
 # Run benchmarking
 # We have included some demo images related to Nudity unlearning as examples. Please refer to "dataset/Benchmarking_images_demo"
