@@ -47,7 +47,7 @@ conda activate igmu
 
 # Run benchmarking
 # We have included some demo images related to Nudity unlearning as examples. Please refer to "dataset/Benchmarking_images_demo"
-python -W ignore benchmark.py --evaluation-aspect forggeting|fid|lpips|yolo|CSDR
+python -W ignore benchmark.py --evaluation-aspect forgetting|fid|lpips|yolo|CSDR
 
 # evaluate fid and lpips for 
 # We have included some demo images related to Church unlearning as examples. Please refer to "dataset/Benchmarking_images_demo"
