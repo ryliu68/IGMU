@@ -413,7 +413,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch-size', type=int, default=5, help="Batch size for evaluation.")
     parser.add_argument('--evaluation-aspect', type=str, required=True,
-                        choices=["forggeting", "fid", "yolo", "lpips", "CSDR"],
+                        choices=["forgetting", "fid", "yolo", "lpips", "CSDR"],
                         help="Select which evaluation metric to run.")
     parser.add_argument('--object', type=bool, default=False, choices=[True, False],
                         help="Evaluate FID/LPIPS for object-unlearning tasks only.")
@@ -436,7 +436,7 @@ if __name__ == '__main__':
     os.makedirs(args.results_dir, exist_ok=True)
 
     # Dispatch evaluation according to the chosen aspect
-    if args.evaluation_aspect == "forggeting":
+    if args.evaluation_aspect == "forgetting":
         evaluate_forgot(args)
     elif args.evaluation_aspect == "fid":
         if args.object:
@@ -455,7 +455,7 @@ if __name__ == '__main__':
     else:
         raise NotImplementedError(f"Unknown evaluation aspect: {args.evaluation_aspect}")
 
-    # args.evaluation_aspects = ["forggeting", "fid", "yolo", "lpips",  "CSDR"]
+    # args.evaluation_aspects = ["forgetting", "fid", "yolo", "lpips",  "CSDR"]
 
     # for evaluation_aspect in args.evaluation_aspects:
     # args.evaluation_aspect = evaluation_aspect
